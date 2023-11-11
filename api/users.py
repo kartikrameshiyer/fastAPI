@@ -12,6 +12,7 @@ class User(BaseModel):
     email : str
     is_active : bool
     bio : Optional[str] = None
+    
 @router.get("/users",response_model=List[User])
 async def get_users():
     return users
@@ -21,4 +22,4 @@ async def create_user(user: User):
     return "success" 
 @router.get("/user/{id}")
 async def get_user(id: int= Path(...,description=" The iD of the user you want to retreive", gt=2)):
-    return users[{"id": "1" }]
+    return users[id]
