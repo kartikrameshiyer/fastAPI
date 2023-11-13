@@ -1,7 +1,7 @@
 from datetime import datetime
 import enum
 
-from sqlalchemy import Enum,Column,ForeignKey,Integer,String,Text,Boolean
+from sqlalchemy import Enum, Column, ForeignKey, Integer, String, Text, Boolean
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
 
@@ -11,53 +11,50 @@ from .mixins import Timestamp
 
 
 class ContentType(enum.Enum):
-    lesson= 1
+    lesson = 1
     quiz = 2
     assignment = 3
 
 
-
-
-class Course(Timestamp,Base):
+class Course(Timestamp, Base):
     __tablename__ = "courses"
-    
-    id= Column(Integer(), primary_key=True,index=True)
+
+    id = Column(Integer, primary_key=True, index=True)
     title = Column(String(200), nullable=False)
-    description = Column(Text,nullable=True)
-    user_id = Column(Integer,ForeignKey("users.id"),nullable=False)
+    description = Column(Text, nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-    created_by = relationship("User")
-    sections = relationship("Section",back_populates="course",uselist=False)
-    student_courses = relationship("StudentCourse",back_populates="course")
+    created_by = relationship(User)
+    sections = relationship("Section", back_populates="course", uselist=False)
+    student_courses = relationship("StudentCourse", back_populates="course")
 
 
-class Section(Timestamp,Base):
-    """A section of a course"""
-    __tablename__ = 'sections'
+class Section(Timestamp, Base):
+    __tablename__ = "sections"
 
-    id = Column(Integer(), primary_key=True,index=True)
+    id = Column(Integer, primary_key=True, index=True)
     title = Column(String(200), nullable=False)
-    description = Column(Text,nullable=True)
-    course_id = Column(Integer,ForeignKey("courses.id"),nullable= False)
-    course= relationship("Course",back_populates="sections")
-    content_blocks= relationship("ContentBlock",back_populates="section")
+    description = Column(Text, nullable=True)
+    course_id = Column(Integer, ForeignKey("courses.id"), nullable=False)
+
+    course = relationship("Course", back_populates="sections")
+    content_blocks = relationship("ContentBlock", back_populates="section")
 
 
-class ContentBlock(Timestamp,Base):
-    """A block of content in a section"""
-    __tablename__ = 'content_blocks'
+class ContentBlock(Timestamp, Base):
+    __tablename__ = "content_blocks"
 
-    id = Column(Integer(), primary_key=True,index=True)
+    id = Column(Integer, primary_key=True, index=True)
     title = Column(String(200), nullable=False)
-    description = Column(Text,nullable=True)
+    description = Column(Text, nullable=True)
     type = Column(Enum(ContentType))
-    url  = Column(URLType, nullable =False)
-    content = Column(Text,nullable=True)
-    section_id = Column(Integer,ForeignKey("sections.id"),nullable = False)
+    url = Column(URLType, nullable=True)
+    content = Column(Text, nullable=True)
+    section_id = Column(Integer, ForeignKey("sections.id"), nullable=False)
 
-    section = relationship(User,back_populates="student_content_blocks")
+    section = relationship("Section", back_populates="content_blocks")
     completed_content_blocks = relationship("CompletedContentBlock", back_populates="content_block")
- 
+
 
 class StudentCourse(Timestamp, Base):
     """
@@ -89,6 +86,3 @@ class CompletedContentBlock(Timestamp, Base):
 
     student = relationship(User, back_populates="student_content_blocks")
     content_block = relationship(ContentBlock, back_populates="completed_content_blocks")
-
-
-
