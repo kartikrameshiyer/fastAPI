@@ -1,6 +1,5 @@
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select
 
 from db.models.user import User
 from pydantic_schemas.user import UserCreate
