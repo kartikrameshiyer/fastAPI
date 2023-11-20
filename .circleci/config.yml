@@ -10,12 +10,12 @@ jobs:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: echo hello
+      - run: echo " My pipeline id is <<pipeline.id>> and pipeline.git.branch is my branch"
   print_world:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - run: echo world
+      - run: echo "This is what caused the build <<pipeline.project.git_url>>"
 workflows:
   # Name the workflow "welcome"
   welcome:
